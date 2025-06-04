@@ -3,7 +3,7 @@
 
 services:
   vpn:
-    image: ghcr.io/RosemanLabs/openvpn-client
+    image: ghcr.io/iputonmyrobeandwizardhatirl/openvpn-client
     # build: .
     container_name: openvpn-client
     cap_add:

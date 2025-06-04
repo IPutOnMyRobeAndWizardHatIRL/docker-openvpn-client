@@ -19,12 +19,12 @@ You can either pull it from GitHub Container Registry or build it yourself.
 
 To pull it from GitHub Container Registry, run
 ```bash
-docker pull ghcr.io/RosemanLabs/openvpn-client
+docker pull ghcr.io/iputonmyrobeandwizardhatirl/openvpn-client
 ```
 
 To build it yourself, run
 ```bash
-docker build -t ghcr.io/RosemanLabs/openvpn-client https://github.com/RosemanLabs/docker-openvpn-client.git
+docker build -t ghcr.io/iputonmyrobeandwizardhatirl/openvpn-client https://github.com/iputonmyrobeandwizardhatirl/docker-openvpn-client.git
 ```
 
 ### Creating and running a container
@@ -39,14 +39,14 @@ docker run --detach \
   --cap-add=NET_ADMIN \
   --device=/dev/net/tun \
   --volume <path/to/config/dir>:/data/vpn \
-  ghcr.io/RosemanLabs/openvpn-client
+  ghcr.io/iputonmyrobeandwizardhatirl/openvpn-client
 ```
 
 #### `docker-compose`
 ```yaml
 services:
   openvpn-client:
-    image: ghcr.io/RosemanLabs/openvpn-client
+    image: ghcr.io/iputonmyrobeandwizardhatirl/openvpn-client
     container_name: openvpn-client
     cap_add:
       - NET_ADMIN
@@ -94,7 +94,7 @@ ports:
 In both cases, replace `<host_port>` and `<container_port>` with the port used by your connected container.
 
 ### Verifying functionality
-Once you have container running `ghcr.io/RosemanLabs/openvpn-client`, run the following command to spin up a temporary container using `openvpn-client` for networking.
+Once you have container running `ghcr.io/iputonmyrobeandwizardhatirl/openvpn-client`, run the following command to spin up a temporary container using `openvpn-client` for networking.
 The `wget -qO - ifconfig.me` bit will return the public IP of the container (and anything else using `openvpn-client` for networking).
 You should see an IP address owned by your VPN provider.
 ```bash
