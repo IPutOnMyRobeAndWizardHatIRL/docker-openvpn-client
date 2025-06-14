@@ -66,6 +66,32 @@ sed -i 's/\r$//g' "$modified_config_file"
 
 default_gateway=$(ip -4 route | grep 'default via' | awk '{print $3}')
 
+# Get container IP (works inside openvpn-client container)
+container_ip=$(ip addr show eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
+
+# Split comma-separated VPN_DEST_PORTS into array
+IFS=',' read -ra PORTS <<< "$VPN_DEST_PORTS"
+
+for port in "${PORTS[@]}"; do
+  # Trim whitespace
+  port=$(echo "$port" | xargs)
+
+  # Skip empty values
+  [[ -z "$port" ]] && continue
+
+  # DNAT for incoming traffic from tun0
+  iptables -t nat -A PREROUTING -i tun0 -p tcp --dport "$port" -j DNAT --to-destination "$container_ip:$port"
+
+  # Accept forwarding to the container
+  iptables -A FORWARD -p tcp -d "$container_ip" --dport "$port" -j ACCEPT
+
+  # DNAT for incoming traffic from tun0
+  iptables -t nat -A PREROUTING -i tun0 -p udp --dport "$port" -j DNAT --to-destination "$container_ip:$port"
+
+  # Accept forwarding to the container
+  iptables -A FORWARD -p udp -d "$container_ip" --dport "$port" -j ACCEPT
+done
+
 case "$KILL_SWITCH" in
     'iptables')
         echo "info: kill switch is using iptables"
